@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:uber_app/extensions/colors.dart';
 import 'package:uber_app/screens/splashScreen.dart';
+import 'package:uber_app/store/appStore.dart';
 
-void main() {
-  runApp(const MyApp());
+AppStore appStore = AppStore();
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await initialize();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -14,6 +22,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Splashscreen(),
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: jcbPrimaryColor),
+        useMaterial3: true,
+      ),
     );
   }
 }

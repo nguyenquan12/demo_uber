@@ -4,6 +4,7 @@ import 'package:styled_widget/styled_widget.dart';
 import 'package:uber_app/components/widget.dart';
 import 'package:uber_app/extensions/colors.dart';
 import 'package:uber_app/extensions/styles.dart';
+import 'package:uber_app/screens/welcomeScreen.dart';
 import 'package:uber_app/utils/constants.dart';
 
 class Walkthroughsreen extends StatefulWidget {
@@ -97,7 +98,10 @@ class _WalkthroughsreenState extends State<Walkthroughsreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Skip').textColor(Colors.white).onTap(() {}),
+                Text('Skip').textColor(Colors.white).onTap(() {
+                  setValue(IS_FIRST_TIME, false);
+                  Welcomescreen().launch(context);
+                }),
                 DotIndicator(
                   pageController: pageController,
                   pages: walkThroughList,
@@ -116,7 +120,10 @@ class _WalkthroughsreenState extends State<Walkthroughsreen> {
                     .onTap(
                   () {
                     if (currentPage == 3) {
-                      // go to Home
+                      // // go to Home
+                      // Homescreen().launch(context);
+                      setValue(IS_FIRST_TIME, false);
+                      Welcomescreen().launch(context);
                     } else {
                       pageController.nextPage(
                         duration: Duration(milliseconds: 500),

@@ -4,6 +4,7 @@ import 'package:uber_app/components/widget.dart';
 import 'package:uber_app/extensions/colors.dart';
 import 'package:uber_app/extensions/styles.dart';
 import 'package:uber_app/screens/walkthroughSreen.dart';
+import 'package:uber_app/screens/welcomeScreen.dart';
 import 'package:uber_app/utils/constants.dart';
 
 class Splashscreen extends StatefulWidget {
@@ -25,7 +26,14 @@ class _SplashscreenState extends State<Splashscreen> {
     await 3.seconds.delay;
     finish(context);
     // go to Walkthrough screen
-    Walkthroughsreen().launch(context);
+    if (getBoolAsync(IS_FIRST_TIME)) {
+      Walkthroughsreen().launch(context);
+    } else {
+      if (getBoolAsync(IS_LOGGED_IN)) {
+      } else {
+        Welcomescreen().launch(context);
+      }
+    }
   }
 
   @override

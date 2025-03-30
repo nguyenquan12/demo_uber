@@ -8,3 +8,11 @@ const img_walkthrough1 = 'images/juberCarBooking/jcb_walkthrough1.png';
 const img_walkthrough2 = 'images/juberCarBooking/jcb_walkthrough2.png';
 const img_walkthrough3 = 'images/juberCarBooking/jcb_walkthrough3.png';
 const img_walkthrough4 = 'images/juberCarBooking/jcb_walkthrough4.png';
+
+/// UI
+double jcbButtonRadius = 4.0;
+double jcbBottomSheetRadius = 20.0;
+
+/// SharedReference keys
+const IS_FIRST_TIME = 'IS_FIRST_TIME';
+const IS_LOGGED_IN = 'IS_LOGGED_IN';
