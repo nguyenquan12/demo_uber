@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:uber_app/extensions/colors.dart';
 import 'package:uber_app/utils/constants.dart';
 
@@ -22,5 +23,17 @@ Widget Loading() {
       height: 50,
       width: 50,
     ),
+  );
+}
+
+Widget jcbBackWidget(BuildContext context) {
+  return IconButton(
+    icon: const Icon(
+      Icons.arrow_back_ios,
+      color: jcbDarkColor,
+    ),
+    onPressed: () {
+      finish(context);
+    },
   );
 }

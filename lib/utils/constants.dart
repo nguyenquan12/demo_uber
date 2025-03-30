@@ -2,12 +2,17 @@
 const img_splash_background =
     'images/juberCarBooking/jcb_splash_background_image.png';
 const img_logo = 'images/juberCarBooking/juber_app_icon.png';
+const img_fb_logo = 'images/juberCarBooking/fb_logo.png';
 const img_loader = 'images/juberCarBooking/jcbGifs/jcb_loader.gif';
 
 const img_walkthrough1 = 'images/juberCarBooking/jcb_walkthrough1.png';
 const img_walkthrough2 = 'images/juberCarBooking/jcb_walkthrough2.png';
 const img_walkthrough3 = 'images/juberCarBooking/jcb_walkthrough3.png';
 const img_walkthrough4 = 'images/juberCarBooking/jcb_walkthrough4.png';
+
+//Icons
+const ic_telephone = 'images/juberCarBooking/jcbIcons/ic_telephone.png';
+const ic_google = 'images/juberCarBooking/jcbIcons/ic_google.png';
 
 /// UI
 double jcbButtonRadius = 4.0;

@@ -3,6 +3,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:uber_app/components/widget.dart';
 import 'package:uber_app/extensions/colors.dart';
 import 'package:uber_app/extensions/styles.dart';
+import 'package:uber_app/screens/loginScreen.dart';
+import 'package:uber_app/screens/signupScreen.dart';
 import 'package:uber_app/utils/constants.dart';
 
 class Welcomescreen extends StatefulWidget {
@@ -73,7 +75,9 @@ class _WelcomescreenState extends State<Welcomescreen> {
                       style: boldTextStyle(color: jcbPrimaryColor, size: 20),
                       textAlign: TextAlign.center,
                     ),
-                  ),
+                  ).onTap(() {
+                    Signupscreen().launch(context);
+                  }),
                   Container(
                     margin: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 20),
@@ -88,7 +92,9 @@ class _WelcomescreenState extends State<Welcomescreen> {
                       style: boldTextStyle(color: Colors.white, size: 20),
                       textAlign: TextAlign.center,
                     ),
-                  ),
+                  ).onTap(() {
+                    Loginscreen().launch(context); // Navigate to login screen
+                  }),
                 ],
               ),
             ),
