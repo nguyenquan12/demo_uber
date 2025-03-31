@@ -94,7 +94,7 @@ class _LoginscreenState extends State<Loginscreen> {
             20.height,
             AppButton(
               padding: EdgeInsets.all(10),
-              color: Colors.green[800],
+              color: Colors.green[700],
               width: context.width() - 32,
               elevation: 0,
               shapeBorder: RoundedRectangleBorder(
@@ -121,7 +121,7 @@ class _LoginscreenState extends State<Loginscreen> {
             16.height,
             AppButton(
               padding: EdgeInsets.all(0),
-              color: Colors.blue,
+              color: Colors.blue[700],
               width: context.width() - 32,
               elevation: 0,
               shapeBorder: RoundedRectangleBorder(
