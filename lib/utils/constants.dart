@@ -13,6 +13,7 @@ const img_walkthrough4 = 'images/juberCarBooking/jcb_walkthrough4.png';
 //Icons
 const ic_telephone = 'images/juberCarBooking/jcbIcons/ic_telephone.png';
 const ic_google = 'images/juberCarBooking/jcbIcons/ic_google.png';
+const ic_tick = 'images/juberCarBooking/jcbIcons/ic_tick.png';
 
 /// UI
 double jcbButtonRadius = 4.0;

@@ -47,128 +47,136 @@ class _SignupscreenState extends State<Signupscreen> {
         ],
         elevation: 0,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        child: Container(
+          height: context.height() * 0.9,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Sign up',
-                style: boldTextStyle(
-                  color: jcbDarkColor,
-                  size: 35,
-                  weight: FontWeight.w900,
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Text(
+                    'Sign up',
+                    style: boldTextStyle(
+                      color: jcbDarkColor,
+                      size: 35,
+                      weight: FontWeight.w900,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // First Name
+                      Jcbformtextfield(
+                        label: 'First Name',
+                        textFieldType: TextFieldType.NAME,
+                        controller: firstNameCont,
+                        focusNode: firstNameFocus,
+                        nextFocusNode: lastNameFocus,
+                        autoFocus: false,
+                        width: context.width() / 2 - 24,
+                        labelSpace: true,
+                      ),
+                      // Last name
+                      Jcbformtextfield(
+                        label: 'Last Name',
+                        textFieldType: TextFieldType.NAME,
+                        controller: lastNameCont,
+                        focusNode: lastNameFocus,
+                        nextFocusNode: emailFocus,
+                        width: context.width() / 2 - 24,
+                        labelSpace: true,
+                      ),
+                    ],
+                  ),
+                  // Email
                   Jcbformtextfield(
-                    label: 'First Name',
-                    textFieldType: TextFieldType.NAME,
-                    controller: firstNameCont,
-                    focusNode: firstNameFocus,
-                    nextFocusNode: lastNameFocus,
-                    autoFocus: false,
-                    width: context.width() / 2 - 24,
-                    labelSpace: true,
+                    label: 'Email',
+                    textFieldType: TextFieldType.EMAIL,
+                    controller: emailCont,
+                    focusNode: emailFocus,
+                    nextFocusNode: phoneFocus,
+                  ),
+                  24.height,
+                  SizedBox(
+                    width: context.width() - 32,
+                    child: IntlPhoneField(
+                      decoration: InputDecoration(
+                        labelText: 'Phone Number',
+                        labelStyle: boldTextStyle(
+                          color: jcbGreyColor,
+                          size: 14,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: radius(8),
+                            borderSide:
+                                BorderSide(color: jcbSecBorderColor, width: 1)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: radius(8),
+                            borderSide:
+                                BorderSide(color: jcbSecBorderColor, width: 2)),
+                      ),
+                      initialCountryCode: 'VN',
+                      onChanged: (phone) {
+                        print(phone.completeNumber);
+                      },
+                    ),
                   ),
                   Jcbformtextfield(
-                    label: 'Last Name',
-                    textFieldType: TextFieldType.NAME,
-                    controller: lastNameCont,
-                    focusNode: lastNameFocus,
-                    nextFocusNode: emailFocus,
-                    width: context.width() / 2 - 24,
-                    labelSpace: true,
+                    label: 'Password',
+                    textFieldType: TextFieldType.PASSWORD,
+                    controller: passwordCont,
+                    focusNode: passwordFocus,
+                    textInputAction: TextInputAction.done,
                   ),
+                  24.height,
+                  RichText(
+                    text: TextSpan(
+                      text: 'By clicking "Sign Up" you agree to our ',
+                      style: secondaryTextStyle(color: context.iconColor),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: 'terms and conditions',
+                          style: secondaryTextStyle(
+                              color: context.iconColor,
+                              decoration: TextDecoration.underline),
+                        ),
+                        TextSpan(
+                          text: ' as well as our ',
+                          style: secondaryTextStyle(color: context.iconColor),
+                        ),
+                        TextSpan(
+                          text: 'Privacy Policy',
+                          style: secondaryTextStyle(
+                              color: context.iconColor,
+                              decoration: TextDecoration.underline),
+                        ),
+                      ],
+                    ),
+                  ),
+                  16.height,
                 ],
               ),
-              Jcbformtextfield(
-                label: 'Email',
-                textFieldType: TextFieldType.EMAIL,
-                controller: emailCont,
-                focusNode: emailFocus,
-                nextFocusNode: phoneFocus,
-              ),
-              16.height,
-              SizedBox(
+              AppButton(
                 width: context.width() - 32,
-                child: IntlPhoneField(
-                  decoration: InputDecoration(
-                    labelText: 'Phone Number',
-                    labelStyle: boldTextStyle(
-                      color: jcbGreyColor,
-                      size: 14,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: radius(8),
-                        borderSide:
-                            BorderSide(color: jcbSecBorderColor, width: 1)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: radius(8),
-                        borderSide:
-                            BorderSide(color: jcbSecBorderColor, width: 2)),
-                  ),
-                  initialCountryCode: 'VN',
-                  onChanged: (phone) {
-                    print(phone.completeNumber);
-                  },
+                child: Text(
+                  'Sign Up',
+                  style: boldTextStyle(color: Colors.white),
                 ),
-              ),
-              Jcbformtextfield(
-                label: 'Password',
-                textFieldType: TextFieldType.PASSWORD,
-                controller: passwordCont,
-                focusNode: passwordFocus,
-                textInputAction: TextInputAction.done,
-              ),
-              24.height,
-              RichText(
-                text: TextSpan(
-                  text: 'By clicking "Sign Up" you agree to our ',
-                  style: secondaryTextStyle(color: context.iconColor),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: 'terms and conditions',
-                      style: secondaryTextStyle(
-                          color: context.iconColor,
-                          decoration: TextDecoration.underline),
-                    ),
-                    TextSpan(
-                      text: ' as well as our ',
-                      style: secondaryTextStyle(color: context.iconColor),
-                    ),
-                    TextSpan(
-                      text: 'Privacy Policy',
-                      style: secondaryTextStyle(
-                          color: context.iconColor,
-                          decoration: TextDecoration.underline),
-                    ),
-                  ],
+                onTap: () {
+                  // Handle sign up action
+                },
+                color: jcbPrimaryColor,
+                shapeBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              ),
+                elevation: 0,
+              )
             ],
-          ),
-          16.height,
-          AppButton(
-            width: context.width() - 32,
-            child: Text(
-              'Sign Up',
-              style: boldTextStyle(color: Colors.white),
-            ),
-            onTap: () {
-              // Handle sign up action
-            },
-            color: jcbPrimaryColor,
-            shapeBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            elevation: 0,
-          )
-        ],
-      ).paddingSymmetric(horizontal: 16, vertical: 24),
+          ).paddingSymmetric(horizontal: 16, vertical: 24),
+        ),
+      ),
     );
   }
 }

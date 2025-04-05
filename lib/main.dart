@@ -9,6 +9,7 @@ AppStore appStore = AppStore();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // await Firebase.initializeApp();
   await initialize();
   runApp(MyApp());
 }

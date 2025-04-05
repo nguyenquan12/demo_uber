@@ -1,7 +1,10 @@
 {
     "cSpell.words": [
+        "allprojects",
         "Jcbformtextfield",
         "Loginscreen",
         "Signupscreen"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "cmake.sourceDirectory": "D:/DEMO/uber_app/linux"
 }
