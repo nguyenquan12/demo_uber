@@ -23,8 +23,8 @@ class JCBDrawerComponent extends StatelessWidget {
                   Container(
                     child: Image.asset(
                       img_avatar,
-                      height: 80,
-                      width: 80,
+                      height: 70,
+                      width: 70,
                       fit: BoxFit.cover,
                     ).cornerRadiusWithClipRRect(100),
                     decoration: BoxDecoration(
@@ -33,7 +33,8 @@ class JCBDrawerComponent extends StatelessWidget {
                       ),
                       borderRadius: radius(100),
                     ),
-                  ),
+                  ).center(),
+                  5.height,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -45,7 +46,9 @@ class JCBDrawerComponent extends StatelessWidget {
                                   boldTextStyle(color: Colors.white, size: 18)),
                           Text(
                             '24-12-2003',
-                            style: boldTextStyle(color: jcbSecBorderColor),
+                            style: boldTextStyle(
+                                color: jcbSecBorderColor,
+                                weight: FontWeight.w400),
                           )
                         ],
                       ),
@@ -59,9 +62,71 @@ class JCBDrawerComponent extends StatelessWidget {
                             size: 16,
                           )),
                     ],
-                  )
+                  ),
                 ],
-              ))
+              )),
+          ListTile(
+            leading: Icon(
+              Icons.history,
+              size: 30,
+            ),
+            title: Text('My rides',
+                style: boldTextStyle(size: 20, weight: FontWeight.w500)),
+            onTap: () {
+              finish(context);
+            },
+          ),
+          ListTile(
+            leading: Image.asset(ic_promotions,
+                height: 25, width: 25, fit: BoxFit.cover),
+            title: Text('Promotion',
+                style: boldTextStyle(size: 20, weight: FontWeight.w500)),
+            onTap: () {
+              finish(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.star_border,
+              size: 30,
+            ),
+            title: Text('My favorites',
+                style: boldTextStyle(size: 20, weight: FontWeight.w500)),
+            onTap: () {
+              finish(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.payment_outlined,
+              size: 30,
+            ),
+            title: Text('My payment',
+                style: boldTextStyle(size: 20, weight: FontWeight.w500)),
+            onTap: () {
+              finish(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.notifications_none,
+              size: 30,
+            ),
+            title: Text('Notification',
+                style: boldTextStyle(size: 20, weight: FontWeight.w500)),
+            onTap: () {
+              finish(context);
+            },
+          ),
+          ListTile(
+            leading: Image.asset(ic_messenger,
+                height: 25, width: 25, fit: BoxFit.cover),
+            title: Text('Support',
+                style: boldTextStyle(size: 20, weight: FontWeight.w500)),
+            onTap: () {
+              finish(context);
+            },
+          ),
         ],
       ),
     );
