@@ -3,8 +3,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:uber_app/components/widget.dart';
 import 'package:uber_app/extensions/colors.dart';
 import 'package:uber_app/extensions/styles.dart';
-import 'package:uber_app/screens/auth/loginScreen.dart';
-import 'package:uber_app/screens/auth/signupScreen.dart';
+import 'package:uber_app/screens/auth/login/loginScreen.dart';
+import 'package:uber_app/screens/auth/signup/signupScreen.dart';
 import 'package:uber_app/utils/constants.dart';
 
 class Welcomescreen extends StatefulWidget {

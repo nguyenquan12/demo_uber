@@ -7,7 +7,7 @@ import 'package:uber_app/components/widget.dart';
 import 'package:uber_app/extensions/colors.dart';
 import 'package:uber_app/screens/entry/getStartScreen.dart';
 import 'package:uber_app/screens/main/homeScreen.dart';
-import 'package:uber_app/screens/auth/signupScreen.dart';
+import 'package:uber_app/screens/auth/signup/signupScreen.dart';
 import 'package:uber_app/utils/constants.dart';
 
 // ignore: must_be_immutable

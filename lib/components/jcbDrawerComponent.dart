@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:uber_app/extensions/colors.dart';
-import 'package:uber_app/screens/auth/loginScreen.dart';
+import 'package:uber_app/screens/auth/login/loginScreen.dart';
 import 'package:uber_app/utils/constants.dart';
 
 class JCBDrawerComponent extends StatefulWidget {

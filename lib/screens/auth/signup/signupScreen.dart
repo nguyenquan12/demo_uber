@@ -5,7 +5,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:uber_app/components/jcbFormTextField.dart';
 import 'package:uber_app/components/widget.dart';
 import 'package:uber_app/extensions/colors.dart';
-import 'package:uber_app/screens/auth/loginScreen.dart';
+import 'package:uber_app/screens/auth/login/loginScreen.dart';
+import 'package:uber_app/screens/auth/signup/otpScreen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -31,6 +32,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool isLoading = false;
+  String phoneNumber = ''; // Lưu số điện thoại đầy đủ
 
   // Biến trạng thái để chuyển đổi giữa Phone Number và Email
   bool isPhoneNumber = false;
@@ -40,25 +42,98 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() {
       isLoading = true;
     });
-    try {
-      await _auth.createUserWithEmailAndPassword(
-        email: emailCont.text.trim(),
-        password: passwordCont.text.trim(),
-      );
-      _showSnackBar("Đăng ký thành công!");
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Loginscreen()),
-      );
-    } on FirebaseAuthException catch (e) {
-      _showSnackBar(_getErrorMessage(e.code));
-    } catch (e) {
-      _showSnackBar("Đã xảy ra lỗi, vui lòng thử lại!");
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
+    if (isPhoneNumber) {
+      // Chuẩn hóa số điện thoại
+      String normalizedPhoneNumber =
+          phoneNumber.replaceAll(RegExp(r'\s+'), ''); // Loại bỏ khoảng trắng
+      if (normalizedPhoneNumber.startsWith('0')) {
+        // Nếu người dùng nhập số bắt đầu bằng 0 (ví dụ: 084394266770), thay bằng +84
+        normalizedPhoneNumber = '+84${normalizedPhoneNumber.substring(1)}';
+      }
+
+      // Kiểm tra định dạng và độ dài
+      if (normalizedPhoneNumber.isEmpty ||
+          !normalizedPhoneNumber.startsWith('+')) {
+        setState(() {
+          isLoading = false;
+        });
+        _showSnackBar("Số điện thoại không hợp lệ! Vui lòng kiểm tra lại.");
+        return;
+      }
+
+      // Kiểm tra độ dài (sau mã quốc gia, số điện thoại thường là 9-10 chữ số)
+      String numberWithoutCountryCode =
+          normalizedPhoneNumber.substring(3); // Bỏ phần +84
+      if (numberWithoutCountryCode.length < 9 ||
+          numberWithoutCountryCode.length > 10) {
+        setState(() {
+          isLoading = false;
+        });
+        _showSnackBar(
+            "Số điện thoại không hợp lệ! Độ dài phải từ 9-10 chữ số.");
+        return;
+      }
+
+      // Đăng ký bằng số điện thoại
+      try {
+        await _auth.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          verificationCompleted: (PhoneAuthCredential credential) async {
+            // Tự động xác thực (trong một số trường hợp, ví dụ: trên Android)
+            await _auth.signInWithCredential(credential);
+            _showSnackBar("Đăng ký thành công!");
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => Loginscreen()));
+          },
+          verificationFailed: (FirebaseAuthException e) {
+            setState(() {
+              isLoading = false;
+            });
+            _showSnackBar(_getErrorMessage(e.code));
+          },
+          codeSent: (String verificationId, int? resendToken) {
+            setState(() {
+              isLoading = false;
+            });
+            // Chuyển đến màn hình nhập OTP
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      OTPScreen(verificationId: verificationId)),
+            );
+          },
+          codeAutoRetrievalTimeout: (String verificationID) {},
+        );
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+        _showSnackBar("Đã xảy ra lỗi, vui lòng thử lại!");
+      }
+    } else {
+      // Đăng ký bằng email
+      try {
+        await _auth.createUserWithEmailAndPassword(
+          email: emailCont.text.trim(),
+          password: passwordCont.text.trim(),
+        );
+        _showSnackBar("Đăng ký thành công!");
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Loginscreen()),
+        );
+      } on FirebaseAuthException catch (e) {
+        _showSnackBar(_getErrorMessage(e.code));
+      } catch (e) {
+        _showSnackBar("Đã xảy ra lỗi, vui lòng thử lại!");
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -70,6 +145,8 @@ class _SignupScreenState extends State<SignupScreen> {
         return 'Mật khẩu quá yếu, hãy thử mật khẩu mạnh hơn!';
       case 'invalid-email':
         return 'Email không hợp lệ!';
+      case 'invalid-phone-number':
+        return 'Số điện thoại không hợp lệ!';
       default:
         return 'Đã xảy ra lỗi, vui lòng thử lại!';
     }
@@ -141,7 +218,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         textFieldType: TextFieldType.NAME,
                         controller: lastNameCont,
                         focusNode: lastNameFocus,
-                        nextFocusNode: emailFocus,
+                        nextFocusNode: isPhoneNumber ? phoneFocus : emailFocus,
                         width: context.width() / 2 - 24,
                         labelSpace: true,
                       ),
@@ -171,7 +248,12 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                             initialCountryCode: 'VN',
                             onChanged: (phone) {
-                              print(phone.completeNumber);
+                              setState(() {
+                                phoneNumber = phone
+                                    .completeNumber; // Lưu số điện thoại đầy đủ
+                                print(
+                                    "Phone number updated: $phoneNumber"); // Log để kiểm tra
+                              });
                             },
                           ),
                         )
