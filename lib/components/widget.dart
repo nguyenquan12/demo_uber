@@ -37,3 +37,20 @@ Widget jcbBackWidget(BuildContext context) {
     },
   );
 }
+
+Widget jcbDottedLineComponent() {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: List.generate(5, (index) {
+      return Container(
+        margin: EdgeInsets.symmetric(vertical: 2),
+        height: 4,
+        width: 4,
+        decoration: BoxDecoration(
+          color: jcbDarkColor,
+          shape: BoxShape.circle,
+        ),
+      );
+    }),
+  );
+}

@@ -5,6 +5,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:uber_app/components/jcbDrawerComponent.dart';
 import 'package:uber_app/components/widget.dart';
 import 'package:uber_app/extensions/colors.dart';
+import 'package:uber_app/screens/main/searchDestinationScreen.dart';
 import 'package:uber_app/utils/constants.dart';
 
 final GlobalKey<ScaffoldState> jcbHomeKey = GlobalKey();
@@ -110,9 +111,11 @@ class _HomescreenState extends State<Homescreen> {
                           textStyle: boldTextStyle(),
                           onChanged: (val) {
                             hideKeyboard(context);
+                            SearchDestinationScreen().launch(context);
                           },
                           onTap: () {
                             hideKeyboard(context);
+                            SearchDestinationScreen().launch(context);
                           },
                           decoration: InputDecoration(
                             suffixIcon: Image.asset(
