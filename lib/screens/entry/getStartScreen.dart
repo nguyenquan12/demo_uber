@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:uber_app/extensions/colors.dart';
-import 'package:uber_app/screens/homeScreen.dart';
+import 'package:uber_app/screens/main/homeScreen.dart';
 import 'package:uber_app/utils/constants.dart';
 
 class Getstartscreen extends StatefulWidget {

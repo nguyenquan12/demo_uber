@@ -1,10 +1,51 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:uber_app/extensions/colors.dart';
+import 'package:uber_app/screens/auth/loginScreen.dart';
 import 'package:uber_app/utils/constants.dart';
 
-class JCBDrawerComponent extends StatelessWidget {
+class JCBDrawerComponent extends StatefulWidget {
   const JCBDrawerComponent({super.key});
+
+  @override
+  State<JCBDrawerComponent> createState() => _JCBDrawerComponentState();
+}
+
+class _JCBDrawerComponentState extends State<JCBDrawerComponent> {
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+
+  // Hàm đăng xuất
+  Future<void> _signOut() async {
+    try {
+      // Đăng xuất khỏi Google
+      await _googleSignIn.signOut();
+      // Đăng xuất khỏi Firebase
+      await FirebaseAuth.instance.signOut();
+
+      // Hiển thị thông báo
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Đăng xuất thành công!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      // Chuyển về màn hình đăng nhập
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const Loginscreen()),
+      );
+    } catch (e) {
+      // Hiển thị lỗi nếu có
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Đăng xuất thất bại: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,6 +166,17 @@ class JCBDrawerComponent extends StatelessWidget {
                 style: boldTextStyle(size: 20, weight: FontWeight.w500)),
             onTap: () {
               finish(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.exit_to_app,
+              size: 30,
+            ),
+            title: Text('Sign out',
+                style: boldTextStyle(size: 20, weight: FontWeight.w500)),
+            onTap: () {
+              _signOut();
             },
           ),
         ],

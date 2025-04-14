@@ -1,7 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:uber_app/extensions/colors.dart';
-import 'package:uber_app/screens/splashScreen.dart';
+import 'package:uber_app/screens/onboarding/splashScreen.dart';
 import 'package:uber_app/store/appStore.dart';
 
 AppStore appStore = AppStore();
@@ -9,7 +10,7 @@ AppStore appStore = AppStore();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
   await initialize();
   runApp(MyApp());
 }

@@ -3,8 +3,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:uber_app/components/widget.dart';
 import 'package:uber_app/extensions/colors.dart';
 import 'package:uber_app/extensions/styles.dart';
-import 'package:uber_app/screens/loginScreen.dart';
-import 'package:uber_app/screens/signupScreen.dart';
+import 'package:uber_app/screens/auth/loginScreen.dart';
+import 'package:uber_app/screens/auth/signupScreen.dart';
 import 'package:uber_app/utils/constants.dart';
 
 class Welcomescreen extends StatefulWidget {
@@ -76,7 +76,7 @@ class _WelcomescreenState extends State<Welcomescreen> {
                       textAlign: TextAlign.center,
                     ),
                   ).onTap(() {
-                    Signupscreen().launch(context);
+                    SignupScreen().launch(context);
                   }),
                   Container(
                     margin: const EdgeInsets.symmetric(

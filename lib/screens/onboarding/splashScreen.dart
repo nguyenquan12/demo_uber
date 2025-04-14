@@ -3,7 +3,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:uber_app/components/widget.dart';
 import 'package:uber_app/extensions/colors.dart';
 import 'package:uber_app/extensions/styles.dart';
-import 'package:uber_app/screens/walkthroughScreen.dart';
+import 'package:uber_app/screens/onboarding/walkthroughScreen.dart';
 import 'package:uber_app/utils/constants.dart';
 
 class Splashscreen extends StatefulWidget {

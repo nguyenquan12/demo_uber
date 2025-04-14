@@ -1,32 +1,88 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:uber_app/components/jcbFormTextField.dart';
 import 'package:uber_app/components/widget.dart';
 import 'package:uber_app/extensions/colors.dart';
-import 'package:uber_app/screens/loginScreen.dart';
+import 'package:uber_app/screens/auth/loginScreen.dart';
 
-class Signupscreen extends StatefulWidget {
-  const Signupscreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<Signupscreen> createState() => _SignupscreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupscreenState extends State<Signupscreen> {
+class _SignupScreenState extends State<SignupScreen> {
   TextEditingController firstNameCont = TextEditingController();
   TextEditingController lastNameCont = TextEditingController();
   TextEditingController emailCont = TextEditingController();
   TextEditingController phoneCont = TextEditingController();
   TextEditingController passwordCont = TextEditingController();
+  TextEditingController confirmPasswordCont = TextEditingController();
 
   FocusNode firstNameFocus = FocusNode();
   FocusNode lastNameFocus = FocusNode();
   FocusNode emailFocus = FocusNode();
   FocusNode phoneFocus = FocusNode();
   FocusNode passwordFocus = FocusNode();
+  FocusNode confirmPasswordFocus = FocusNode();
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool isLoading = false;
+
+  // Biến trạng thái để chuyển đổi giữa Phone Number và Email
+  bool isPhoneNumber = false;
   String countryCode = '+1';
+
+  Future<void> _signUp() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      await _auth.createUserWithEmailAndPassword(
+        email: emailCont.text.trim(),
+        password: passwordCont.text.trim(),
+      );
+      _showSnackBar("Đăng ký thành công!");
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Loginscreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      _showSnackBar(_getErrorMessage(e.code));
+    } catch (e) {
+      _showSnackBar("Đã xảy ra lỗi, vui lòng thử lại!");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  String _getErrorMessage(String errorCode) {
+    switch (errorCode) {
+      case 'email-already-in-use':
+        return 'Email này đã được sử dụng!';
+      case 'weak-password':
+        return 'Mật khẩu quá yếu, hãy thử mật khẩu mạnh hơn!';
+      case 'invalid-email':
+        return 'Email không hợp lệ!';
+      default:
+        return 'Đã xảy ra lỗi, vui lòng thử lại!';
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        // duration: const Duration(seconds: 2),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +104,15 @@ class _SignupscreenState extends State<Signupscreen> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: context.height() * 0.9,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Sign up title
                   Text(
                     'Sign up',
                     style: boldTextStyle(
@@ -63,7 +120,7 @@ class _SignupscreenState extends State<Signupscreen> {
                       size: 35,
                       weight: FontWeight.w900,
                     ),
-                  ),
+                  ).center(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -90,47 +147,79 @@ class _SignupscreenState extends State<Signupscreen> {
                       ),
                     ],
                   ),
-                  // Email
-                  Jcbformtextfield(
-                    label: 'Email',
-                    textFieldType: TextFieldType.EMAIL,
-                    controller: emailCont,
-                    focusNode: emailFocus,
-                    nextFocusNode: phoneFocus,
-                  ),
-                  24.height,
-                  SizedBox(
-                    width: context.width() - 32,
-                    child: IntlPhoneField(
-                      decoration: InputDecoration(
-                        labelText: 'Phone Number',
-                        labelStyle: boldTextStyle(
-                          color: jcbGreyColor,
-                          size: 14,
+                  // Hiển thị Phone Number hoặc Email dựa trên isPhoneNumber
+                  isPhoneNumber
+                      // Hiển thị Phone Number
+                      ? Container(
+                          margin: const EdgeInsets.only(top: 24),
+                          width: context.width() - 32,
+                          child: IntlPhoneField(
+                            decoration: InputDecoration(
+                              labelText: 'Phone Number',
+                              labelStyle: boldTextStyle(
+                                color: jcbGreyColor,
+                                size: 14,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: radius(8),
+                                  borderSide: BorderSide(
+                                      color: jcbSecBorderColor, width: 1)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: radius(8),
+                                  borderSide: BorderSide(
+                                      color: jcbSecBorderColor, width: 2)),
+                            ),
+                            initialCountryCode: 'VN',
+                            onChanged: (phone) {
+                              print(phone.completeNumber);
+                            },
+                          ),
+                        )
+                      //Hiển thị Email
+                      : Jcbformtextfield(
+                          label: 'Email',
+                          textFieldType: TextFieldType.EMAIL,
+                          controller: emailCont,
+                          focusNode: emailFocus,
+                          nextFocusNode: passwordFocus,
                         ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: radius(8),
-                            borderSide:
-                                BorderSide(color: jcbSecBorderColor, width: 1)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: radius(8),
-                            borderSide:
-                                BorderSide(color: jcbSecBorderColor, width: 2)),
+                  8.height,
+                  // Chuyển đổi giữa Phone Number và Email
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isPhoneNumber = !isPhoneNumber; // Chuyển đổi trạng thái
+                      });
+                    },
+                    child: Text(
+                      isPhoneNumber
+                          ? 'Switch to Email'
+                          : 'Switch to Phone Number',
+                      style: boldTextStyle(
+                        color: jcbPrimaryColor,
+                        weight: FontWeight.w600,
                       ),
-                      initialCountryCode: 'VN',
-                      onChanged: (phone) {
-                        print(phone.completeNumber);
-                      },
                     ),
                   ),
+                  // Password
                   Jcbformtextfield(
                     label: 'Password',
                     textFieldType: TextFieldType.PASSWORD,
                     controller: passwordCont,
                     focusNode: passwordFocus,
+                    nextFocusNode: confirmPasswordFocus,
+                    textInputAction: TextInputAction.done,
+                  ),
+                  // Confirm Password
+                  Jcbformtextfield(
+                    label: 'Confirm Password',
+                    textFieldType: TextFieldType.PASSWORD,
+                    controller: confirmPasswordCont,
+                    focusNode: confirmPasswordFocus,
                     textInputAction: TextInputAction.done,
                   ),
                   24.height,
+                  // Terms and Conditions (Điều khoản và điều kiện)
                   RichText(
                     text: TextSpan(
                       text: 'By clicking "Sign Up" you agree to our ',
@@ -166,6 +255,7 @@ class _SignupscreenState extends State<Signupscreen> {
                 ),
                 onTap: () {
                   // Handle sign up action
+                  _signUp();
                 },
                 color: jcbPrimaryColor,
                 shapeBorder: RoundedRectangleBorder(
