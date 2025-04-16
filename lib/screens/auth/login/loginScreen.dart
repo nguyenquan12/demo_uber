@@ -62,7 +62,7 @@ class _LoginscreenState extends State<Loginscreen> {
       setState(() {
         _errorMessage = _getErrorMessage(e.code);
       });
-      _showSnackBar("$_errorMessage. Chi tiet: $e", Colors.red);
+      _showSnackBar("$_errorMessage", Colors.red);
       print(e.code);
     } finally {
       setState(() {
@@ -103,10 +103,9 @@ class _LoginscreenState extends State<Loginscreen> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const Getstartscreen()),
       );
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       setState(() {
-        _errorMessage = 'Đăng nhập bằng Google thất bại! Chi tiết: $e';
-        print(e);
+        _errorMessage = _getErrorMessage(e.code);
       });
       _showSnackBar(_errorMessage!, Colors.red);
     } finally {

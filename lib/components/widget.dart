@@ -8,7 +8,7 @@ Widget Vertical_large = const SizedBox(
 );
 
 Widget Vertical_medium = const SizedBox(
-  height: 40,
+  height: 20,
 );
 
 Widget Vertical_small = const SizedBox(
@@ -43,9 +43,9 @@ Widget jcbDottedLineComponent() {
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: List.generate(5, (index) {
       return Container(
-        margin: EdgeInsets.symmetric(vertical: 2),
-        height: 4,
-        width: 4,
+        margin: EdgeInsets.symmetric(vertical: 1.5),
+        height: 2.5,
+        width: 2.5,
         decoration: BoxDecoration(
           color: jcbDarkColor,
           shape: BoxShape.circle,
