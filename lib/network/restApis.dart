@@ -18,7 +18,12 @@ Future<UserModel> logInApi(Map request) async {
 }
 
 Future<GoogleMapSearchModel> searchAddressRequest({String? search}) async {
-  return GoogleMapSearchModel.fromJson(await handleResponse(await buildHttpResponse(
-      'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$search&key=$googleMapAPIKey&components=country:${defaultCountry}',
-      method: HttpMethod.GET)));
+  final encodedSearch = Uri.encodeQueryComponent(search ?? '');
+  final url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json'
+      '?input=$encodedSearch'
+      '&key=$googleMapAPIKey'
+      '&components=country:$defaultCountry';
+  print("API Request URL: $url"); // In URL để kiểm tra
+  return GoogleMapSearchModel.fromJson(await handleResponse(
+      await buildHttpResponse(url, method: HttpMethod.GET)));
 }

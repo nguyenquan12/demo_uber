@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:uber_app/components/widget.dart';
 import 'package:uber_app/extensions/colors.dart';
+import 'package:uber_app/models/googleMapSearchModel%20.dart';
 import 'package:uber_app/models/jcbSearchDestinationModel.dart';
+import 'package:uber_app/network/restApis.dart';
 import 'package:uber_app/utils/constants.dart';
 
 class SearchDestinationScreen extends StatefulWidget {
@@ -15,11 +19,14 @@ class SearchDestinationScreen extends StatefulWidget {
 
 class _SearchDestinationScreenState extends State<SearchDestinationScreen> {
   List<JCBSearchDestinationModel> destinationList = jcbDestinationsList();
-
   TextEditingController destination = TextEditingController();
-  List<String> addedDestinations = [];
 
-  bool showAdd = false;
+  List<String> addedDestinations = [];
+  // bool showAdd = false;
+
+  bool isDone = true;
+  List<Prediction> listAddress = [];
+  Timer? _debounce;
 
   Widget getDesWidget() {
     if (addedDestinations.isEmpty) {
@@ -86,6 +93,7 @@ class _SearchDestinationScreenState extends State<SearchDestinationScreen> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     addedDestinations.clear();
     super.dispose();
   }
@@ -190,8 +198,50 @@ class _SearchDestinationScreenState extends State<SearchDestinationScreen> {
                             ),
                           ),
                           onChanged: (val) {
-                            showAdd = true;
-                            setState(() {});
+                            if (_debounce?.isActive ?? false)
+                              _debounce!.cancel();
+                            _debounce =
+                                Timer(const Duration(milliseconds: 500), () {
+                              if (val.isNotEmpty && val.length >= 3) {
+                                setState(() {
+                                  isDone = false;
+                                });
+                                searchAddressRequest(search: val).then((value) {
+                                  print("Input: $val");
+                                  print("Status: ${value.status}");
+                                  print("Predictions: ${value.predictions}");
+                                  setState(() {
+                                    isDone = true;
+                                    if (value.status == "OK" &&
+                                        value.predictions != null &&
+                                        value.predictions!.isNotEmpty) {
+                                      listAddress =
+                                          value.predictions!.cast<Prediction>();
+                                      print("List Address: $listAddress");
+                                    } else {
+                                      listAddress = [];
+                                      print(
+                                          "No predictions available. Status: ${value.status}");
+                                      if (value.status != "OK") {
+                                        toast("API Error: ${value.status}");
+                                      }
+                                    }
+                                  });
+                                }).catchError((error) {
+                                  log("API Error: $error");
+                                  setState(() {
+                                    isDone = true;
+                                    listAddress = [];
+                                    toast("Failed to load suggestions: $error");
+                                  });
+                                });
+                              } else {
+                                setState(() {
+                                  isDone = true;
+                                  listAddress.clear();
+                                });
+                              }
+                            });
                           },
                         ),
                       ],
@@ -200,6 +250,37 @@ class _SearchDestinationScreenState extends State<SearchDestinationScreen> {
                 ],
               ),
             ),
+            // Show Suggestion
+            if (listAddress.isNotEmpty) SizedBox(height: 16),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: ListView.builder(
+                  controller: ScrollController(),
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  itemCount: listAddress.length,
+                  itemBuilder: (context, index) {
+                    Prediction mData = listAddress[index];
+                    return ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.home),
+                      minLeadingWidth: 16,
+                      title: Text(
+                        mData.description ?? "",
+                        style: primaryTextStyle(),
+                      ),
+                      onTap: () async {
+                        // Do something
+                        snackBar(context, title: mData.description!);
+                        destination.clear();
+                        listAddress.clear();
+                        setState(() {});
+                      },
+                    );
+                  }),
+            ),
+
+            // Home
             Container(
               margin: EdgeInsets.only(left: 16, right: 16, top: 16),
               child: Row(
@@ -231,6 +312,7 @@ class _SearchDestinationScreenState extends State<SearchDestinationScreen> {
               color: jcbSecBorderColor,
               indent: 60,
             ),
+            // Work
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
